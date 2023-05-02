@@ -17,6 +17,7 @@ func TestClient(t *testing.T) {
 		ApiUrl: "http://localhost:8080",
 	})
 
+	var bitcoinAddress string
 	t.Run("create on-chain invoice", func(t *testing.T) {
 		addr, err := cl.CreateOnChainInvoice(&kaminarigosdk.CreateInvoiceRequest{
 			Amount:      1,
@@ -25,8 +26,11 @@ func TestClient(t *testing.T) {
 		})
 		require.NoError(t, err)
 		require.NotEmpty(t, addr)
+
+		bitcoinAddress = addr
 	})
 
+	var lightningInvoice string
 	t.Run("create lightning invoice", func(t *testing.T) {
 		resp, err := cl.CreateLightningInvoice(&kaminarigosdk.CreateInvoiceRequest{
 			Amount:      1,
@@ -36,5 +40,24 @@ func TestClient(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, resp)
 		require.NotNil(t, resp)
+
+		lightningInvoice = resp.Invoice
+	})
+
+	t.Run("send on-chain payment", func(t *testing.T) {
+		err := cl.SendOnChainPayment(&kaminarigosdk.SendOnChainPaymentRequest{
+			BitcoinAddress: bitcoinAddress,
+			Amount:         1,
+			MerchantId:     "",
+		})
+		require.NoError(t, err)
+	})
+
+	t.Run("send lightning payment", func(t *testing.T) {
+		err := cl.SendLightningPayment(&kaminarigosdk.SendLightningPaymentRequest{
+			Invoice:    lightningInvoice,
+			MerchantId: "",
+		})
+		require.NoError(t, err)
 	})
 }
