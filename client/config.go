@@ -13,11 +13,6 @@ func (c Config) GetApiUrl() string {
 	return c.ApiUrl
 }
 
-func getSecretValue(secret string) (string, error) {
-	// TODO: mb change it.
-	return secret, nil
-}
-
 func isCfgValid(cfg *Config) bool {
 	if cfg == nil {
 		return false

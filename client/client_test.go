@@ -12,10 +12,10 @@ import (
 	"github.com/BoostyLabs/kaminari-go-sdk/client"
 )
 
-func TestAdapter(t *testing.T) {
+func TestClient(t *testing.T) {
 	t.Skip("for manual testing")
 
-	cl := client.DefaultAdapter(&client.Config{
+	cl := client.DefaultClient(&client.Config{
 		ApiKey: "9fbda4b2ad024f5c98b7d21288cdcb01de83bfc9a435966cba858d6bfdf417fb",
 		ApiUrl: "http://localhost:8080",
 	})

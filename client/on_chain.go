@@ -1,8 +1,6 @@
 package client
 
 import (
-	"fmt"
-
 	kaminarigosdk "github.com/BoostyLabs/kaminari-go-sdk"
 )
 
@@ -10,8 +8,8 @@ type createOnChainInvoiceResp struct {
 	BitcoinAddress string `json:"bitcoin_address"`
 }
 
-func (c *client) createOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (*createOnChainInvoiceResp, error) {
-	url := fmt.Sprintf("%v/invoice", c.onChainURL())
+func (c *Client) createOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (*createOnChainInvoiceResp, error) {
+	url := "/api/bitcoin/v1/invoice"
 	var result createOnChainInvoiceResp
 	resp, err := c.restyClient.R().
 		SetBody(req).
@@ -24,8 +22,8 @@ func (c *client) createOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (
 	return &result, nil
 }
 
-func (c *client) createLightningInvoice(req *kaminarigosdk.CreateInvoiceRequest) (*kaminarigosdk.CreateLightningInvoiceResponse, error) {
-	url := fmt.Sprintf("%v/invoice", c.lightningURL())
+func (c *Client) createLightningInvoice(req *kaminarigosdk.CreateInvoiceRequest) (*kaminarigosdk.CreateLightningInvoiceResponse, error) {
+	url := "/api/lightning/v1/invoice"
 	var result kaminarigosdk.CreateLightningInvoiceResponse
 	resp, err := c.restyClient.R().
 		SetBody(req).

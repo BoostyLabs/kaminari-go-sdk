@@ -1,6 +1,5 @@
 package kaminarigosdk
 
-//go:generate mockgen -source=interface.go -destination=mock_client.go -package=kaminarigosdk
 type Interface interface {
 	CreateOnChainInvoice(*CreateInvoiceRequest) (string, error)
 	CreateLightningInvoice(*CreateInvoiceRequest) (*CreateLightningInvoiceResponse, error)

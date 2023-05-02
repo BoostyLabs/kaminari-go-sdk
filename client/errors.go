@@ -13,14 +13,9 @@ import (
 // 	objectNotFoundCategory = "OBJECT_NOT_FOUND"
 // )
 
-var ErrContactNotFound = errors.New("contact not found error")
-var ErrCompanyNotFound = errors.New("company not found error")
-
 type kaminariError struct {
-	Status        string `json:"status"`
-	Message       string `json:"message"`
-	CorrelationId string `json:"correlationId"`
-	Category      string `json:"category"`
+	Status  string `json:"status"`
+	Message string `json:"message"`
 }
 
 func parsekaminariError(rawError []byte) (*kaminariError, error) {
@@ -36,10 +31,8 @@ func (err *kaminariError) Error() string {
 	tmpl := `
 Status:        %v
 Message:       %v
-CorrelationId: %v
-Category:      %v
 `
-	return fmt.Sprintf(tmpl, err.Status, err.Message, err.CorrelationId, err.Category)
+	return fmt.Sprintf(tmpl, err.Status, err.Message)
 }
 
 type httpErr struct {
