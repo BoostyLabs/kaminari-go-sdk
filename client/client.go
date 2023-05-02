@@ -1,6 +1,3 @@
-//go:build !mock && !scale
-// +build !mock,!scale
-
 package client
 
 import (

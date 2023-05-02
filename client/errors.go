@@ -18,7 +18,7 @@ type kaminariError struct {
 	Message string `json:"message"`
 }
 
-func parsekaminariError(rawError []byte) (*kaminariError, error) {
+func parseKaminariError(rawError []byte) (*kaminariError, error) {
 	var err kaminariError
 	if err := json.Unmarshal(rawError, &err); err != nil {
 		return nil, errors.Wrap(err, "can't unmarshal raw error")
@@ -61,7 +61,7 @@ func checkForError(resp *resty.Response, err error) error {
 	}
 
 	if !isSuccess(resp.StatusCode()) {
-		kaminariErr, err := parsekaminariError(resp.Body())
+		kaminariErr, err := parseKaminariError(resp.Body())
 		if err != nil {
 			return newHttpErr(resp.StatusCode(), errors.New(resp.String()))
 		}
