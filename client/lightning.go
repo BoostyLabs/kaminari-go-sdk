@@ -33,8 +33,22 @@ func (c *Client) sendLightningPayment(req *kaminarigosdk.SendLightningPaymentReq
 }
 
 func (c *Client) getLightningInvoice(req *kaminarigosdk.GetLightningInvoiceRequest) (*kaminarigosdk.GetLightningInvoiceResponse, error) {
-	url := fmt.Sprintf("/api/lightning/v1/invoices/{%s}", req.Id)
+	url := fmt.Sprintf("/api/lightning/v1/invoices/{%s}", req.ID)
 	var result kaminarigosdk.GetLightningInvoiceResponse
+
+	resp, err := c.restyClient.R().
+		SetResult(&result).
+		Get(url)
+	if err := checkForError(resp, err); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
+
+func (c *Client) getLightningTransaction(req *kaminarigosdk.GetLightningTransactionRequest) (*kaminarigosdk.GetLightningTransactionResponse, error) {
+	url := fmt.Sprintf("/api/lightning/v1/transactions/{%s}", req.ID)
+	var result kaminarigosdk.GetLightningTransactionResponse
 
 	resp, err := c.restyClient.R().
 		SetResult(&result).

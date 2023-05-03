@@ -9,12 +9,15 @@ type Interface interface {
 
 	GetOnChainInvoice(*GetOnChainInvoiceRequest) (*GetOnChainInvoiceResponse, error)
 	GetLightningInvoice(*GetLightningInvoiceRequest) (*GetLightningInvoiceResponse, error)
+
+	GetOnChainTransaction(*GetOnChainTransactionRequest) (*GetOnChainTransactionResponse, error)
+	GetLightningTransaction(*GetLightningTransactionRequest) (*GetLightningTransactionResponse, error)
 }
 
 type CreateInvoiceRequest struct {
 	Amount      int64  `json:"amount"`
 	Description string `json:"description"`
-	MerchantId  string `json:"merchant_id"`
+	MerchantID  string `json:"merchant_id"`
 }
 
 type CreateLightningInvoiceResponse struct {
@@ -25,12 +28,12 @@ type CreateLightningInvoiceResponse struct {
 type SendOnChainPaymentRequest struct {
 	BitcoinAddress string `json:"bitcoin_address"`
 	Amount         int64  `json:"amount"`
-	MerchantId     string `json:"merchant_id"`
+	MerchantID     string `json:"merchant_id"`
 }
 
 type SendLightningPaymentRequest struct {
 	Invoice    string `json:"invoice"`
-	MerchantId string `json:"merchant_id"`
+	MerchantID string `json:"merchant_id"`
 }
 
 type GetOnChainInvoiceRequest struct {
@@ -70,7 +73,7 @@ type Timestamp struct {
 }
 
 type GetLightningInvoiceRequest struct {
-	Id string `json:"id"`
+	ID string `json:"id"`
 }
 
 type GetLightningInvoiceResponse struct {
@@ -78,10 +81,70 @@ type GetLightningInvoiceResponse struct {
 }
 
 type FilteredLightningInvoice struct {
-	Id             string        `json:"id"`
+	ID             string        `json:"id"`
 	EncodedInvoice string        `json:"encoded_invoice"`
 	Description    string        `json:"description"`
 	Amount         int64         `json:"amount"`
 	Status         InvoiceStatus `json:"status"`
 	CreatedAt      *Timestamp    `json:"created_at"`
+}
+
+type GetOnChainTransactionRequest struct {
+	ID string `json:"id"`
+}
+
+type GetOnChainTransactionResponse struct {
+	Transaction *FilteredOnChainTransaction `json:"transaction"`
+}
+
+type FilteredOnChainTransaction struct {
+	ID            string            `json:"id"`
+	MerchantID    string            `json:"merchant_id"`
+	Status        TransactionStatus `json:"status"`
+	Source        string            `json:"source"`
+	Destination   string            `json:"destination"`
+	Amount        int64             `json:"amount"`
+	CreatedAt     *Timestamp        `json:"created_at"`
+	Direction     TransactionType   `json:"direction"`
+	Confirmations int32             `json:"confirmations"`
+	BlockNumber   int64             `json:"block_number"`
+	ExplorerUrl   string            `json:"explorer_url"`
+}
+
+type TransactionStatus int32
+
+const (
+	TransactionStatus_TRANSACTION_STATUS_UNSPECIFIED         TransactionStatus = 0
+	TransactionStatus_TRANSACTION_STATUS_FAILED              TransactionStatus = 1
+	TransactionStatus_TRANSACTION_STATUS_SUCCESS             TransactionStatus = 2
+	TransactionStatus_TRANSACTION_STATUS_PENDING             TransactionStatus = 3
+	TransactionStatus_TRANSACTION_STATUS_WAITING_TO_FINALIZE TransactionStatus = 4
+)
+
+type TransactionType int32
+
+const (
+	TransactionType_TRANSACTION_TYPE_UNSPECIFIED TransactionType = 0
+	TransactionType_TRANSACTION_TYPE_INCOMING    TransactionType = 1
+	TransactionType_TRANSACTION_TYPE_OUTGOING    TransactionType = 2
+)
+
+type GetLightningTransactionRequest struct {
+	ID string `json:"id"`
+}
+
+type GetLightningTransactionResponse struct {
+	Transaction *FilteredLightningTransaction `json:"transaction"`
+}
+
+type FilteredLightningTransaction struct {
+	ID          string            `json:"id"`
+	MerchantID  string            `json:"merchant_id"`
+	Status      TransactionStatus `json:"status"`
+	Source      string            `json:"source"`
+	Destination string            `json:"destination"`
+	Amount      int64             `json:"amount"`
+	CreatedAt   *Timestamp        `json:"created_at"`
+	Direction   TransactionType   `json:"direction"`
+	ExplorerUrl string            `json:"explorer_url"`
 }

@@ -50,3 +50,17 @@ func (c *Client) getOnChainInvoice(req *kaminarigosdk.GetOnChainInvoiceRequest) 
 
 	return &result, nil
 }
+
+func (c *Client) getOnChainTransaction(req *kaminarigosdk.GetOnChainTransactionRequest) (*kaminarigosdk.GetOnChainTransactionResponse, error) {
+	url := fmt.Sprintf("/api/bitcoin/v1/transactions/{%s}", req.ID)
+	var result kaminarigosdk.GetOnChainTransactionResponse
+
+	resp, err := c.restyClient.R().
+		SetResult(&result).
+		Get(url)
+	if err := checkForError(resp, err); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
+}
