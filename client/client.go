@@ -73,3 +73,21 @@ func (a *Client) SendLightningPayment(req *kaminarigosdk.SendLightningPaymentReq
 
 	return nil
 }
+
+func (a *Client) GetOnChainInvoice(req *kaminarigosdk.GetOnChainInvoiceRequest) (*kaminarigosdk.GetOnChainInvoiceResponse, error) {
+	resp, err := a.getOnChainInvoice(req)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't get on-chain invoice")
+	}
+
+	return resp, nil
+}
+
+func (a *Client) GetLightningInvoice(req *kaminarigosdk.GetLightningInvoiceRequest) (*kaminarigosdk.GetLightningInvoiceResponse, error) {
+	resp, err := a.getLightningInvoice(req)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't get lightning invoice")
+	}
+
+	return resp, nil
+}
