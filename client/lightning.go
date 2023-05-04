@@ -7,7 +7,7 @@ import (
 )
 
 func (c *Client) createLightningInvoice(req *kaminarigosdk.CreateInvoiceRequest) (*kaminarigosdk.CreateLightningInvoiceResponse, error) {
-	url := "/api/lightning/v1/invoice"
+	url := fmt.Sprintf("%s/api/lightning/v1/invoice", c.cfg.ApiUrl)
 	var result kaminarigosdk.CreateLightningInvoiceResponse
 	resp, err := c.restyClient.R().
 		SetBody(req).
@@ -21,7 +21,7 @@ func (c *Client) createLightningInvoice(req *kaminarigosdk.CreateInvoiceRequest)
 }
 
 func (c *Client) sendLightningPayment(req *kaminarigosdk.SendLightningPaymentRequest) error {
-	url := "/api/lightning/v1/payment/send"
+	url := fmt.Sprintf("%s/api/lightning/v1/payment/send", c.cfg.ApiUrl)
 	resp, err := c.restyClient.R().
 		SetBody(req).
 		Post(url)
@@ -33,7 +33,7 @@ func (c *Client) sendLightningPayment(req *kaminarigosdk.SendLightningPaymentReq
 }
 
 func (c *Client) getLightningInvoice(req *kaminarigosdk.GetLightningInvoiceRequest) (*kaminarigosdk.GetLightningInvoiceResponse, error) {
-	url := fmt.Sprintf("/api/lightning/v1/invoices/{%s}", req.ID)
+	url := fmt.Sprintf("%s/api/lightning/v1/invoices/%s", c.cfg.ApiUrl, req.ID)
 	var result kaminarigosdk.GetLightningInvoiceResponse
 
 	resp, err := c.restyClient.R().
@@ -47,7 +47,7 @@ func (c *Client) getLightningInvoice(req *kaminarigosdk.GetLightningInvoiceReque
 }
 
 func (c *Client) getLightningTransaction(req *kaminarigosdk.GetLightningTransactionRequest) (*kaminarigosdk.GetLightningTransactionResponse, error) {
-	url := fmt.Sprintf("/api/lightning/v1/transactions/{%s}", req.ID)
+	url := fmt.Sprintf("%s/api/lightning/v1/transactions/%s", c.cfg.ApiUrl, req.ID)
 	var result kaminarigosdk.GetLightningTransactionResponse
 
 	resp, err := c.restyClient.R().

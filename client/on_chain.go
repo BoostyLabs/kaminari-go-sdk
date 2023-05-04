@@ -11,7 +11,7 @@ type createOnChainInvoiceResp struct {
 }
 
 func (c *Client) createOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (*createOnChainInvoiceResp, error) {
-	url := "/api/bitcoin/v1/invoice"
+	url := fmt.Sprintf("%s/api/bitcoin/v1/invoice", c.cfg.ApiUrl)
 	var result createOnChainInvoiceResp
 
 	resp, err := c.restyClient.R().
@@ -26,7 +26,7 @@ func (c *Client) createOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (
 }
 
 func (c *Client) sendOnChainPayment(req *kaminarigosdk.SendOnChainPaymentRequest) error {
-	url := "/api/bitcoin/v1/payment/send"
+	url := fmt.Sprintf("%s/api/bitcoin/v1/payment/send", c.cfg.ApiUrl)
 	resp, err := c.restyClient.R().
 		SetBody(req).
 		Post(url)
@@ -38,7 +38,7 @@ func (c *Client) sendOnChainPayment(req *kaminarigosdk.SendOnChainPaymentRequest
 }
 
 func (c *Client) getOnChainInvoice(req *kaminarigosdk.GetOnChainInvoiceRequest) (*kaminarigosdk.GetOnChainInvoiceResponse, error) {
-	url := fmt.Sprintf("/api/bitcoin/v1/invoices/{%s}", req.BitcoinAddress)
+	url := fmt.Sprintf("%s/api/bitcoin/v1/invoices/%s", c.cfg.ApiUrl, req.BitcoinAddress)
 	var result kaminarigosdk.GetOnChainInvoiceResponse
 
 	resp, err := c.restyClient.R().
@@ -52,7 +52,7 @@ func (c *Client) getOnChainInvoice(req *kaminarigosdk.GetOnChainInvoiceRequest) 
 }
 
 func (c *Client) getOnChainTransaction(req *kaminarigosdk.GetOnChainTransactionRequest) (*kaminarigosdk.GetOnChainTransactionResponse, error) {
-	url := fmt.Sprintf("/api/bitcoin/v1/transactions/{%s}", req.ID)
+	url := fmt.Sprintf("%s/api/bitcoin/v1/transactions/%s", c.cfg.ApiUrl, req.ID)
 	var result kaminarigosdk.GetOnChainTransactionResponse
 
 	resp, err := c.restyClient.R().
