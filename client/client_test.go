@@ -13,7 +13,7 @@ func TestClient(t *testing.T) {
 	t.Skip("for manual testing")
 
 	cl := client.DefaultClient(&client.Config{
-		ApiKey: "9d326b15f6923007ab8138237a646b1f48f620f32179801ab334ee1026918a89",
+		ApiKey: "8a3093744c910eb0dad59d52556bcfc35036e32a8868019a05c8352cad226ebe",
 		ApiUrl: "http://localhost:8080",
 	})
 
@@ -50,15 +50,15 @@ func TestClient(t *testing.T) {
 			Amount:         1,
 			MerchantID:     "",
 		})
-		require.Error(t, err)
+		require.NoError(t, err)
 	})
 
 	t.Run("send lightning payment", func(t *testing.T) {
 		err := cl.SendLightningPayment(&kaminarigosdk.SendLightningPaymentRequest{
-			Invoice:    invoice.Invoice,
+			Invoice:    "lnbcrt30n1pj92rhdpp59222w4qnt7j7q9e5q8h4ccf6hpuhmuw3hxj8rtta3galm0g7jrxqdq6w3jhxazlv3jhxcmjd9c8g6t0dccqzpgxqyz5vqsp5342yghgpm639hywl90a6xqmkjn2xyf2xewmn6lk27u7nma5zspzs9qyyssqv77n7dvyu7m4h54eqmuq69z4nc2299tnldj0qrddmj6mmzfpcdvq37dahw6kandj9c4turp2j8rgflyyfruuagkl5truug2977uwkdspsej75a",
 			MerchantID: "",
 		})
-		require.Error(t, err)
+		require.NoError(t, err)
 	})
 
 	t.Run("get on-chain invoice", func(t *testing.T) {
@@ -70,8 +70,8 @@ func TestClient(t *testing.T) {
 		require.NotNil(t, resp.Invoice)
 		require.NotEmpty(t, resp.Invoice.BitcoinAddress)
 		require.Equal(t, "test description", resp.Invoice.Description)
-		require.Equal(t, "1", resp.Invoice.Amount)
-		require.Equal(t, "INVOICE_STATUS_UNPAID", resp.Invoice.Status)
+		require.EqualValues(t, 1, resp.Invoice.Amount)
+		require.Equal(t, kaminarigosdk.InvoiceStatus_INVOICE_STATUS_UNPAID, resp.Invoice.Status)
 		require.NotEmpty(t, resp.Invoice.CreatedAt)
 	})
 
@@ -85,23 +85,23 @@ func TestClient(t *testing.T) {
 		require.NotEmpty(t, resp.Invoice.ID)
 		require.NotEmpty(t, resp.Invoice.EncodedInvoice)
 		require.Equal(t, "test description", resp.Invoice.Description)
-		require.Equal(t, "1", resp.Invoice.Amount)
-		require.Equal(t, "INVOICE_STATUS_UNPAID", resp.Invoice.Status)
+		require.EqualValues(t, 1, resp.Invoice.Amount)
+		require.Equal(t, kaminarigosdk.InvoiceStatus_INVOICE_STATUS_UNPAID, resp.Invoice.Status)
 		require.NotEmpty(t, resp.Invoice.CreatedAt)
 	})
 
 	t.Run("get on-chain transaction", func(t *testing.T) {
 		_, err := cl.GetOnChainTransaction(&kaminarigosdk.GetOnChainTransactionRequest{
-			ID: "",
+			ID: "684cc668-96de-416c-9ff9-22531f5b6899",
 		})
-		require.Error(t, err)
+		require.NoError(t, err)
 	})
 
 	t.Run("get lightning transaction", func(t *testing.T) {
 		_, err := cl.GetLightningTransaction(&kaminarigosdk.GetLightningTransactionRequest{
-			ID: "",
+			ID: "3530ab8c-b721-4a15-97b8-0cada5546b3b",
 		})
-		require.Error(t, err)
+		require.NoError(t, err)
 	})
 
 	t.Run("verify webhook signature", func(t *testing.T) {

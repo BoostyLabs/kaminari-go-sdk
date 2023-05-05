@@ -47,11 +47,31 @@ type GetOnChainInvoiceResponse struct {
 }
 
 type FilteredOnChainInvoice struct {
-	BitcoinAddress string `json:"bitcoinAddress"`
-	Description    string `json:"description"`
-	Amount         string `json:"amount"`
-	Status         string `json:"status"`
-	CreatedAt      string `json:"createdAt"`
+	BitcoinAddress string        `json:"bitcoin_address"`
+	Description    string        `json:"description"`
+	Amount         int64         `json:"amount"`
+	Status         InvoiceStatus `json:"status"`
+	CreatedAt      *Timestamp    `json:"created_at"`
+}
+
+type InvoiceStatus int32
+
+const (
+	InvoiceStatus_INVOICE_STATUS_UNSPECIFIED InvoiceStatus = 0
+	InvoiceStatus_INVOICE_STATUS_PAID        InvoiceStatus = 1
+	InvoiceStatus_INVOICE_STATUS_UNPAID      InvoiceStatus = 2
+)
+
+type Timestamp struct {
+	// Represents seconds of UTC time since Unix epoch
+	// 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
+	// 9999-12-31T23:59:59Z inclusive.
+	Seconds int64 `json:"seconds,omitempty"`
+	// Non-negative fractions of a second at nanosecond resolution. Negative
+	// second values with fractions must still have non-negative nanos values
+	// that count forward in time. Must be from 0 to 999,999,999
+	// inclusive.
+	Nanos int32 `json:"nanos,omitempty"`
 }
 
 type GetLightningInvoiceRequest struct {
@@ -63,12 +83,12 @@ type GetLightningInvoiceResponse struct {
 }
 
 type FilteredLightningInvoice struct {
-	ID             string `json:"id"`
-	EncodedInvoice string `json:"encodedInvoice"`
-	Description    string `json:"description"`
-	Amount         string `json:"amount"`
-	Status         string `json:"status"`
-	CreatedAt      string `json:"createdAt"`
+	ID             string        `json:"id"`
+	EncodedInvoice string        `json:"encoded_invoice"`
+	Description    string        `json:"description"`
+	Amount         int64         `json:"amount"`
+	Status         InvoiceStatus `json:"status"`
+	CreatedAt      *Timestamp    `json:"created_at"`
 }
 
 type GetOnChainTransactionRequest struct {
@@ -80,18 +100,36 @@ type GetOnChainTransactionResponse struct {
 }
 
 type FilteredOnChainTransaction struct {
-	ID            string `json:"id"`
-	MerchantID    string `json:"merchantId"`
-	Status        string `json:"status"`
-	Source        string `json:"source"`
-	Destination   string `json:"destination"`
-	Amount        string `json:"amount"`
-	CreatedAt     string `json:"createdAt"`
-	Direction     string `json:"direction"`
-	Confirmations string `json:"confirmations"`
-	BlockNumber   string `json:"blockNumber"`
-	ExplorerUrl   string `json:"explorerUrl"`
+	ID            string            `json:"id"`
+	MerchantID    string            `json:"merchant_id"`
+	Status        TransactionStatus `json:"status"`
+	Source        string            `json:"source"`
+	Destination   string            `json:"destination"`
+	Amount        int64             `json:"amount"`
+	CreatedAt     *Timestamp        `json:"created_at"`
+	Direction     TransactionType   `json:"direction"`
+	Confirmations int32             `json:"confirmations"`
+	BlockNumber   int64             `json:"block_number"`
+	ExplorerUrl   string            `json:"explorer_url"`
 }
+
+type TransactionStatus int32
+
+const (
+	TransactionStatus_TRANSACTION_STATUS_UNSPECIFIED         TransactionStatus = 0
+	TransactionStatus_TRANSACTION_STATUS_FAILED              TransactionStatus = 1
+	TransactionStatus_TRANSACTION_STATUS_SUCCESS             TransactionStatus = 2
+	TransactionStatus_TRANSACTION_STATUS_PENDING             TransactionStatus = 3
+	TransactionStatus_TRANSACTION_STATUS_WAITING_TO_FINALIZE TransactionStatus = 4
+)
+
+type TransactionType int32
+
+const (
+	TransactionType_TRANSACTION_TYPE_UNSPECIFIED TransactionType = 0
+	TransactionType_TRANSACTION_TYPE_INCOMING    TransactionType = 1
+	TransactionType_TRANSACTION_TYPE_OUTGOING    TransactionType = 2
+)
 
 type GetLightningTransactionRequest struct {
 	ID string `json:"id"`
@@ -102,15 +140,15 @@ type GetLightningTransactionResponse struct {
 }
 
 type FilteredLightningTransaction struct {
-	ID          string `json:"id"`
-	MerchantID  string `json:"merchantId"`
-	Status      string `json:"status"`
-	Source      string `json:"source"`
-	Destination string `json:"destination"`
-	Amount      string `json:"amount"`
-	CreatedAt   string `json:"createdAt"`
-	Direction   string `json:"direction"`
-	ExplorerUrl string `json:"explorerUrl"`
+	ID          string            `json:"id"`
+	MerchantID  string            `json:"merchant_id"`
+	Status      TransactionStatus `json:"status"`
+	Source      string            `json:"source"`
+	Destination string            `json:"destination"`
+	Amount      int64             `json:"amount"`
+	CreatedAt   *Timestamp        `json:"created_at"`
+	Direction   TransactionType   `json:"direction"`
+	ExplorerUrl string            `json:"explorer_url"`
 }
 
 type VerifyWebhookSignatureRequest struct {
