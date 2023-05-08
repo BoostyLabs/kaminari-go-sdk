@@ -11,8 +11,7 @@ func (c *Client) verifyWebhookSignature(req *kaminarigosdk.VerifyWebhookSignatur
 	var result kaminarigosdk.VerifyWebhookSignatureResponse
 
 	resp, err := c.restyClient.R().
-		SetBody(req.Event).
-		SetHeader("Kaminari-Signature", req.Signature).
+		SetBody(req).
 		SetResult(&result).
 		Post(url)
 	if err := checkForError(resp, err); err != nil {
