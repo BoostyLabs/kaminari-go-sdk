@@ -7,7 +7,7 @@ import (
 )
 
 func (c *Client) verifyWebhookSignature(req *kaminarigosdk.VerifyWebhookSignatureRequest) (*kaminarigosdk.VerifyWebhookSignatureResponse, error) {
-	url := fmt.Sprintf("%s/gateway/api/webhook/signature/verify", c.cfg.ApiUrl)
+	url := fmt.Sprintf("%s/api/webhook/signature/verify", c.cfg.ApiUrl)
 	var result kaminarigosdk.VerifyWebhookSignatureResponse
 
 	resp, err := c.restyClient.R().
