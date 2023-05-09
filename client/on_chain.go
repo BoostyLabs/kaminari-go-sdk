@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/pkg/errors"
+
 	kaminarigosdk "github.com/BoostyLabs/kaminari-go-sdk"
 )
 
@@ -12,7 +14,7 @@ type createOnChainInvoiceResp struct {
 	BitcoinAddress string `json:"bitcoin_address"`
 }
 
-func (c *Client) createOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (*createOnChainInvoiceResp, error) {
+func (c *Client) CreateOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (string, error) {
 	url := fmt.Sprintf("%s/api/bitcoin/v1/invoice", c.cfg.ApiUrl)
 	var result createOnChainInvoiceResp
 
@@ -21,19 +23,19 @@ func (c *Client) createOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (
 		SetResult(&result).
 		Post(url)
 	if err := checkForError(resp, err); err != nil {
-		return nil, err
+		return "", errors.Wrap(err, "can't create on-chain invoice")
 	}
 
-	return &result, nil
+	return result.BitcoinAddress, nil
 }
 
-func (c *Client) sendOnChainPayment(req *kaminarigosdk.SendOnChainPaymentRequest) error {
+func (c *Client) SendOnChainPayment(req *kaminarigosdk.SendOnChainPaymentRequest) error {
 	url := fmt.Sprintf("%s/api/bitcoin/v1/payment/send", c.cfg.ApiUrl)
 	resp, err := c.restyClient.R().
 		SetBody(req).
 		Post(url)
 	if err := checkForError(resp, err); err != nil {
-		return err
+		return errors.Wrap(err, "can't send on-chain payment")
 	}
 
 	return nil
@@ -51,7 +53,7 @@ type filteredOnChainInvoice struct {
 	CreatedAt      string `json:"createdAt"`
 }
 
-func (c *Client) getOnChainInvoice(req *kaminarigosdk.GetOnChainInvoiceRequest) (*kaminarigosdk.GetOnChainInvoiceResponse, error) {
+func (c *Client) GetOnChainInvoice(req *kaminarigosdk.GetOnChainInvoiceRequest) (*kaminarigosdk.GetOnChainInvoiceResponse, error) {
 	url := fmt.Sprintf("%s/api/bitcoin/v1/invoices/%s", c.cfg.ApiUrl, req.BitcoinAddress)
 	var result getOnChainInvoiceResponse
 
@@ -59,12 +61,12 @@ func (c *Client) getOnChainInvoice(req *kaminarigosdk.GetOnChainInvoiceRequest) 
 		SetResult(&result).
 		Get(url)
 	if err := checkForError(resp, err); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "can't get on-chain invoice")
 	}
 
 	pbInvoice, err := toPbInvoice(result.Invoice)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "can't get on-chain invoice")
 	}
 
 	return &kaminarigosdk.GetOnChainInvoiceResponse{
@@ -90,7 +92,7 @@ type filteredOnChainTransaction struct {
 	ExplorerUrl   string `json:"explorerUrl"`
 }
 
-func (c *Client) getOnChainTransaction(req *kaminarigosdk.GetOnChainTransactionRequest) (*kaminarigosdk.GetOnChainTransactionResponse, error) {
+func (c *Client) GetOnChainTransaction(req *kaminarigosdk.GetOnChainTransactionRequest) (*kaminarigosdk.GetOnChainTransactionResponse, error) {
 	url := fmt.Sprintf("%s/api/bitcoin/v1/transactions/%s", c.cfg.ApiUrl, req.ID)
 	var result getOnChainTransactionResponse
 
@@ -98,12 +100,12 @@ func (c *Client) getOnChainTransaction(req *kaminarigosdk.GetOnChainTransactionR
 		SetResult(&result).
 		Get(url)
 	if err := checkForError(resp, err); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "can't get on-chain transaction")
 	}
 
 	pbTx, err := toPbTx(result.Transaction)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "can't get on-chain transaction")
 	}
 
 	return &kaminarigosdk.GetOnChainTransactionResponse{
