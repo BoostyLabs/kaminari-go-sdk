@@ -8,9 +8,13 @@ import (
 	kaminarigosdk "github.com/BoostyLabs/kaminari-go-sdk"
 )
 
+type verifyWebhookSignatureResponse struct {
+	IsValid bool `json:"isValid"`
+}
+
 func (c *Client) VerifyWebhookSignature(req *kaminarigosdk.VerifyWebhookSignatureRequest) (*kaminarigosdk.VerifyWebhookSignatureResponse, error) {
-	url := fmt.Sprintf("%s/api/webhook/signature/verify", c.cfg.ApiUrl)
-	var result kaminarigosdk.VerifyWebhookSignatureResponse
+	url := fmt.Sprintf("%s/api/webhooks/v1/signature/verify", c.cfg.ApiUrl)
+	var result verifyWebhookSignatureResponse
 
 	resp, err := c.restyClient.R().
 		SetBody(req).
@@ -20,5 +24,7 @@ func (c *Client) VerifyWebhookSignature(req *kaminarigosdk.VerifyWebhookSignatur
 		return nil, errors.Wrap(err, "can't verify webhook signature")
 	}
 
-	return &result, nil
+	return &kaminarigosdk.VerifyWebhookSignatureResponse{
+		IsValid: result.IsValid,
+	}, nil
 }
