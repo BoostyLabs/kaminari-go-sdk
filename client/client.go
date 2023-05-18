@@ -38,8 +38,8 @@ func DefaultClient(cfg *Config) (kaminarigosdk.Interface, error) {
 	}, nil
 }
 
-func (a *Client) CreateOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (string, error) {
-	resp, err := a.createOnChainInvoice(req)
+func (c *Client) CreateOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (string, error) {
+	resp, err := c.createOnChainInvoice(req)
 	if err != nil {
 		return "", errors.Wrap(err, "can't create on-chain invoice")
 	}
@@ -47,8 +47,8 @@ func (a *Client) CreateOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (
 	return resp.BitcoinAddress, nil
 }
 
-func (a *Client) CreateLightningInvoice(req *kaminarigosdk.CreateInvoiceRequest) (*kaminarigosdk.CreateLightningInvoiceResponse, error) {
-	resp, err := a.createLightningInvoice(req)
+func (c *Client) CreateLightningInvoice(req *kaminarigosdk.CreateInvoiceRequest) (*kaminarigosdk.CreateLightningInvoiceResponse, error) {
+	resp, err := c.createLightningInvoice(req)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't create lightning invoice")
 	}

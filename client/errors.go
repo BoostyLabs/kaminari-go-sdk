@@ -10,8 +10,8 @@ import (
 )
 
 type kaminariError struct {
-	Status  string `json:"status"`
-	Message string `json:"message"`
+	GrpcCode string `json:"code"`
+	Message  string `json:"message"`
 }
 
 func parseKaminariError(rawError []byte) (*kaminariError, error) {
@@ -25,10 +25,10 @@ func parseKaminariError(rawError []byte) (*kaminariError, error) {
 
 func (err *kaminariError) Error() string {
 	tmpl := `
-Status:        %v
+Code:        %v
 Message:       %v
 `
-	return fmt.Sprintf(tmpl, err.Status, err.Message)
+	return fmt.Sprintf(tmpl, err.GrpcCode, err.Message)
 }
 
 type httpErr struct {
