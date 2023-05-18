@@ -9,10 +9,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-// const (
-// 	objectNotFoundCategory = "OBJECT_NOT_FOUND"
-// )
-
 type kaminariError struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
@@ -75,19 +71,3 @@ func checkForError(resp *resty.Response, err error) error {
 func isSuccess(code int) bool {
 	return code >= http.StatusOK && code < 300
 }
-
-// func isNotFound(err error) bool {
-// 	if err == nil {
-// 		return false
-// 	}
-
-// 	if httpErr, ok := err.(*httpErr); ok {
-// 		if kaminariErr, ok := httpErr.UnderlyingError.(*kaminariError); ok {
-// 			if httpErr.HttpStatus == http.StatusNotFound && kaminariErr.Category == objectNotFoundCategory {
-// 				return true
-// 			}
-// 		}
-// 	}
-
-// 	return false
-// }

@@ -15,16 +15,16 @@ type Client struct {
 	restyClient *resty.Client
 }
 
-func DefaultClient(cfg *Config) kaminarigosdk.Interface {
+func DefaultClient(cfg *Config) (kaminarigosdk.Interface, error) {
 	if !isCfgValid(cfg) {
 		err := errors.Errorf("kaminari config is not valid")
 		log.Error(err)
-		return nil
+		return nil, err
 	}
 
 	restyClient := resty.New().
 		SetRetryCount(3).
-		SetHeader("X-kaminari-api-key", cfg.GetApiKey()).
+		SetHeader("X-kaminari-api-key", cfg.ApiKey).
 		SetRetryWaitTime(5 * time.Second).
 		SetRetryMaxWaitTime(15 * time.Second).
 		AddRetryCondition(
@@ -35,7 +35,7 @@ func DefaultClient(cfg *Config) kaminarigosdk.Interface {
 
 	return &Client{
 		restyClient: restyClient,
-	}
+	}, nil
 }
 
 func (a *Client) CreateOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (string, error) {

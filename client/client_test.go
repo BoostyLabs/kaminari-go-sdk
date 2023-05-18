@@ -12,10 +12,11 @@ import (
 func TestClient(t *testing.T) {
 	t.Skip("for manual testing")
 
-	cl := client.DefaultClient(&client.Config{
+	cl, err := client.DefaultClient(&client.Config{
 		ApiKey: "9fbda4b2ad024f5c98b7d21288cdcb01de83bfc9a435966cba858d6bfdf417fb",
 		ApiUrl: "http://localhost:8080",
 	})
+	require.NoError(t, err)
 
 	t.Run("create on-chain invoice", func(t *testing.T) {
 		addr, err := cl.CreateOnChainInvoice(&kaminarigosdk.CreateInvoiceRequest{
