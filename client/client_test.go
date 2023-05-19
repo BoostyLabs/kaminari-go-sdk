@@ -1,6 +1,7 @@
 package client_test
 
 import (
+	"encoding/base64"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -105,11 +106,17 @@ func TestClient(t *testing.T) {
 	})
 
 	t.Run("verify webhook signature", func(t *testing.T) {
+		encodedEvent := "ewoJIlR5cGUiOiAiRVZFTlRfVFlQRV9MSUdIVE5JTkdfSU5WT0lDRV9JU19QQUlEIiwKCSJsaWdodG5pbmdfaW52b2ljZV9pc19wYWlkIjogewoJCSJpZCI6ICJ0ZXN0X2lkIgoJfQp9"
+
+		event, err := base64.StdEncoding.DecodeString(encodedEvent)
+		require.NoError(t, err)
+
 		resp, err := cl.VerifyWebhookSignature(&kaminarigosdk.VerifyWebhookSignatureRequest{
-			Signature: "",
-			Event:     &kaminarigosdk.Event{},
+			Signature: "8822c5e52859e6850381749975b8eacb3b980c8a6b668abbc89a9a7117a0754e3f7778d97cc1e83375686b041c4a1f0dd8b901265f983ec9e56f1a38c53450fe01",
+			Event:     event,
 		})
-		require.Error(t, err)
-		require.Nil(t, resp)
+		require.NoError(t, err)
+		require.NotNil(t, resp)
+		require.True(t, resp.IsValid)
 	})
 }

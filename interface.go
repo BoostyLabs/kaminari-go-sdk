@@ -153,12 +153,13 @@ type FilteredLightningTransaction struct {
 
 type VerifyWebhookSignatureRequest struct {
 	Signature string `json:"signature"`
-	Event     *Event `json:"event"`
+	Event     []byte `json:"event"`
 }
 
 type Event struct {
-	EventType    EventType     `json:"event_type"`
-	EventPayload *EventPayload `json:"event_payload"`
+	EventType              EventType               `json:"event_type"`
+	LightningInvoiceIsPaid *LightningInvoiceIsPaid `json:"lightning_invoice_is_paid,omitempty"`
+	BitcoinInvoiceIsPaid   *BitcoinInvoiceIsPaid   `json:"bitcoin_invoice_is_paid,omitempty"`
 }
 
 type EventType int32
@@ -168,11 +169,6 @@ const (
 	EventType_EVENT_TYPE_LIGHTNING_INVOICE_IS_PAID EventType = 1
 	EventType_EVENT_TYPE_BITCOIN_INVOICE_IS_PAID   EventType = 2
 )
-
-type EventPayload struct {
-	LightningInvoiceIsPaid *LightningInvoiceIsPaid `json:"lightning_invoice_is_paid"`
-	BitcoinInvoiceIsPaid   *BitcoinInvoiceIsPaid   `json:"bitcoin_invoice_is_paid"`
-}
 
 type LightningInvoiceIsPaid struct {
 	Id string `json:"id"`
