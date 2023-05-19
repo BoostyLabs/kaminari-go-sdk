@@ -55,3 +55,21 @@ func (c *Client) CreateLightningInvoice(req *kaminarigosdk.CreateInvoiceRequest)
 
 	return resp, nil
 }
+
+func (a *Client) SendOnChainPayment(req *kaminarigosdk.SendOnChainPaymentRequest) error {
+	err := a.sendOnChainPayment(req)
+	if err != nil {
+		return errors.Wrap(err, "can't send on-chain payment")
+	}
+
+	return nil
+}
+
+func (a *Client) SendLightningPayment(req *kaminarigosdk.SendLightningPaymentRequest) error {
+	err := a.sendLightningPayment(req)
+	if err != nil {
+		return errors.Wrap(err, "can't send lightning payment")
+	}
+
+	return nil
+}

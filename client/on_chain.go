@@ -22,16 +22,14 @@ func (c *Client) createOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (
 	return &result, nil
 }
 
-func (c *Client) createLightningInvoice(req *kaminarigosdk.CreateInvoiceRequest) (*kaminarigosdk.CreateLightningInvoiceResponse, error) {
-	url := "/api/lightning/v1/invoice"
-	var result kaminarigosdk.CreateLightningInvoiceResponse
+func (c *Client) sendOnChainPayment(req *kaminarigosdk.SendOnChainPaymentRequest) error {
+	url := "/api/bitcoin/v1/payment/send"
 	resp, err := c.restyClient.R().
 		SetBody(req).
-		SetResult(&result).
 		Post(url)
 	if err := checkForError(resp, err); err != nil {
-		return nil, err
+		return err
 	}
 
-	return &result, nil
+	return nil
 }
