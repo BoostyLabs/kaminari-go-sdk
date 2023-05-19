@@ -1,6 +1,8 @@
 package client
 
 import (
+	"fmt"
+
 	kaminarigosdk "github.com/BoostyLabs/kaminari-go-sdk"
 )
 
@@ -28,4 +30,18 @@ func (c *Client) sendLightningPayment(req *kaminarigosdk.SendLightningPaymentReq
 	}
 
 	return nil
+}
+
+func (c *Client) getLightningInvoice(req *kaminarigosdk.GetLightningInvoiceRequest) (*kaminarigosdk.GetLightningInvoiceResponse, error) {
+	url := fmt.Sprintf("/api/lightning/v1/invoices/{%s}", req.Id)
+	var result kaminarigosdk.GetLightningInvoiceResponse
+
+	resp, err := c.restyClient.R().
+		SetResult(&result).
+		Get(url)
+	if err := checkForError(resp, err); err != nil {
+		return nil, err
+	}
+
+	return &result, nil
 }
