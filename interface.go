@@ -12,6 +12,8 @@ type Interface interface {
 
 	GetOnChainTransaction(*GetOnChainTransactionRequest) (*GetOnChainTransactionResponse, error)
 	GetLightningTransaction(*GetLightningTransactionRequest) (*GetLightningTransactionResponse, error)
+
+	VerifyWebhookSignature(*VerifyWebhookSignatureRequest) (*VerifyWebhookSignatureResponse, error)
 }
 
 type CreateInvoiceRequest struct {
@@ -147,4 +149,39 @@ type FilteredLightningTransaction struct {
 	CreatedAt   *Timestamp        `json:"created_at"`
 	Direction   TransactionType   `json:"direction"`
 	ExplorerUrl string            `json:"explorer_url"`
+}
+
+type VerifyWebhookSignatureRequest struct {
+	Signature string `json:"signature"`
+	Event     *Event `json:"event"`
+}
+
+type Event struct {
+	EventType    EventType     `json:"event_type"`
+	EventPayload *EventPayload `json:"event_payload"`
+}
+
+type EventType int32
+
+const (
+	EventType_EVENT_TYPE_UNSPECIFIED               EventType = 0
+	EventType_EVENT_TYPE_LIGHTNING_INVOICE_IS_PAID EventType = 1
+	EventType_EVENT_TYPE_BITCOIN_INVOICE_IS_PAID   EventType = 2
+)
+
+type EventPayload struct {
+	LightningInvoiceIsPaid *LightningInvoiceIsPaid `json:"lightning_invoice_is_paid"`
+	BitcoinInvoiceIsPaid   *BitcoinInvoiceIsPaid   `json:"bitcoin_invoice_is_paid"`
+}
+
+type LightningInvoiceIsPaid struct {
+	Id string `json:"id"`
+}
+
+type BitcoinInvoiceIsPaid struct {
+	BitcoinAddress string `json:"bitcoin_address"`
+}
+
+type VerifyWebhookSignatureResponse struct {
+	IsValid bool `json:"is_valid"`
 }

@@ -12,6 +12,7 @@ import (
 )
 
 type Client struct {
+	cfg         *Config
 	restyClient *resty.Client
 }
 
@@ -34,12 +35,13 @@ func DefaultClient(cfg *Config) kaminarigosdk.Interface {
 		)
 
 	return &Client{
+		cfg:         cfg,
 		restyClient: restyClient,
 	}
 }
 
-func (a *Client) CreateOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (string, error) {
-	resp, err := a.createOnChainInvoice(req)
+func (c *Client) CreateOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (string, error) {
+	resp, err := c.createOnChainInvoice(req)
 	if err != nil {
 		return "", errors.Wrap(err, "can't create on-chain invoice")
 	}
@@ -47,8 +49,8 @@ func (a *Client) CreateOnChainInvoice(req *kaminarigosdk.CreateInvoiceRequest) (
 	return resp.BitcoinAddress, nil
 }
 
-func (a *Client) CreateLightningInvoice(req *kaminarigosdk.CreateInvoiceRequest) (*kaminarigosdk.CreateLightningInvoiceResponse, error) {
-	resp, err := a.createLightningInvoice(req)
+func (c *Client) CreateLightningInvoice(req *kaminarigosdk.CreateInvoiceRequest) (*kaminarigosdk.CreateLightningInvoiceResponse, error) {
+	resp, err := c.createLightningInvoice(req)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't create lightning invoice")
 	}
@@ -56,8 +58,8 @@ func (a *Client) CreateLightningInvoice(req *kaminarigosdk.CreateInvoiceRequest)
 	return resp, nil
 }
 
-func (a *Client) SendOnChainPayment(req *kaminarigosdk.SendOnChainPaymentRequest) error {
-	err := a.sendOnChainPayment(req)
+func (c *Client) SendOnChainPayment(req *kaminarigosdk.SendOnChainPaymentRequest) error {
+	err := c.sendOnChainPayment(req)
 	if err != nil {
 		return errors.Wrap(err, "can't send on-chain payment")
 	}
@@ -65,8 +67,8 @@ func (a *Client) SendOnChainPayment(req *kaminarigosdk.SendOnChainPaymentRequest
 	return nil
 }
 
-func (a *Client) SendLightningPayment(req *kaminarigosdk.SendLightningPaymentRequest) error {
-	err := a.sendLightningPayment(req)
+func (c *Client) SendLightningPayment(req *kaminarigosdk.SendLightningPaymentRequest) error {
+	err := c.sendLightningPayment(req)
 	if err != nil {
 		return errors.Wrap(err, "can't send lightning payment")
 	}
@@ -74,8 +76,8 @@ func (a *Client) SendLightningPayment(req *kaminarigosdk.SendLightningPaymentReq
 	return nil
 }
 
-func (a *Client) GetOnChainInvoice(req *kaminarigosdk.GetOnChainInvoiceRequest) (*kaminarigosdk.GetOnChainInvoiceResponse, error) {
-	resp, err := a.getOnChainInvoice(req)
+func (c *Client) GetOnChainInvoice(req *kaminarigosdk.GetOnChainInvoiceRequest) (*kaminarigosdk.GetOnChainInvoiceResponse, error) {
+	resp, err := c.getOnChainInvoice(req)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't get on-chain invoice")
 	}
@@ -83,8 +85,8 @@ func (a *Client) GetOnChainInvoice(req *kaminarigosdk.GetOnChainInvoiceRequest) 
 	return resp, nil
 }
 
-func (a *Client) GetLightningInvoice(req *kaminarigosdk.GetLightningInvoiceRequest) (*kaminarigosdk.GetLightningInvoiceResponse, error) {
-	resp, err := a.getLightningInvoice(req)
+func (c *Client) GetLightningInvoice(req *kaminarigosdk.GetLightningInvoiceRequest) (*kaminarigosdk.GetLightningInvoiceResponse, error) {
+	resp, err := c.getLightningInvoice(req)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't get lightning invoice")
 	}
@@ -92,8 +94,8 @@ func (a *Client) GetLightningInvoice(req *kaminarigosdk.GetLightningInvoiceReque
 	return resp, nil
 }
 
-func (a *Client) GetOnChainTransaction(req *kaminarigosdk.GetOnChainTransactionRequest) (*kaminarigosdk.GetOnChainTransactionResponse, error) {
-	resp, err := a.getOnChainTransaction(req)
+func (c *Client) GetOnChainTransaction(req *kaminarigosdk.GetOnChainTransactionRequest) (*kaminarigosdk.GetOnChainTransactionResponse, error) {
+	resp, err := c.getOnChainTransaction(req)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't get on-chain transaction")
 	}
@@ -101,10 +103,19 @@ func (a *Client) GetOnChainTransaction(req *kaminarigosdk.GetOnChainTransactionR
 	return resp, nil
 }
 
-func (a *Client) GetLightningTransaction(req *kaminarigosdk.GetLightningTransactionRequest) (*kaminarigosdk.GetLightningTransactionResponse, error) {
-	resp, err := a.getLightningTransaction(req)
+func (c *Client) GetLightningTransaction(req *kaminarigosdk.GetLightningTransactionRequest) (*kaminarigosdk.GetLightningTransactionResponse, error) {
+	resp, err := c.getLightningTransaction(req)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't get lightning transaction")
+	}
+
+	return resp, nil
+}
+
+func (c *Client) VerifyWebhookSignature(req *kaminarigosdk.VerifyWebhookSignatureRequest) (*kaminarigosdk.VerifyWebhookSignatureResponse, error) {
+	resp, err := c.verifyWebhookSignature(req)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't verify webhook signature")
 	}
 
 	return resp, nil
