@@ -5,10 +5,12 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/pkg/errors"
+
 	kaminarigosdk "github.com/BoostyLabs/kaminari-go-sdk"
 )
 
-func (c *Client) createLightningInvoice(req *kaminarigosdk.CreateInvoiceRequest) (*kaminarigosdk.CreateLightningInvoiceResponse, error) {
+func (c *Client) CreateLightningInvoice(req *kaminarigosdk.CreateInvoiceRequest) (*kaminarigosdk.CreateLightningInvoiceResponse, error) {
 	url := fmt.Sprintf("%s/api/lightning/v1/invoice", c.cfg.ApiUrl)
 	var result kaminarigosdk.CreateLightningInvoiceResponse
 	resp, err := c.restyClient.R().
@@ -16,19 +18,19 @@ func (c *Client) createLightningInvoice(req *kaminarigosdk.CreateInvoiceRequest)
 		SetResult(&result).
 		Post(url)
 	if err := checkForError(resp, err); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "can't create lightning invoice")
 	}
 
 	return &result, nil
 }
 
-func (c *Client) sendLightningPayment(req *kaminarigosdk.SendLightningPaymentRequest) error {
+func (c *Client) SendLightningPayment(req *kaminarigosdk.SendLightningPaymentRequest) error {
 	url := fmt.Sprintf("%s/api/lightning/v1/payment/send", c.cfg.ApiUrl)
 	resp, err := c.restyClient.R().
 		SetBody(req).
 		Post(url)
 	if err := checkForError(resp, err); err != nil {
-		return err
+		return errors.Wrap(err, "can't send lightning payment")
 	}
 
 	return nil
@@ -47,7 +49,7 @@ type filteredLightningInvoice struct {
 	CreatedAt      string `json:"createdAt"`
 }
 
-func (c *Client) getLightningInvoice(req *kaminarigosdk.GetLightningInvoiceRequest) (*kaminarigosdk.GetLightningInvoiceResponse, error) {
+func (c *Client) GetLightningInvoice(req *kaminarigosdk.GetLightningInvoiceRequest) (*kaminarigosdk.GetLightningInvoiceResponse, error) {
 	url := fmt.Sprintf("%s/api/lightning/v1/invoices/%s", c.cfg.ApiUrl, req.ID)
 	var result getLightningInvoiceResponse
 
@@ -55,12 +57,12 @@ func (c *Client) getLightningInvoice(req *kaminarigosdk.GetLightningInvoiceReque
 		SetResult(&result).
 		Get(url)
 	if err := checkForError(resp, err); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "can't get lightning invoice")
 	}
 
 	pbInvoice, err := toPbLightningInvoice(result.Invoice)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "can't get lightning invoice")
 	}
 
 	return &kaminarigosdk.GetLightningInvoiceResponse{
@@ -86,7 +88,7 @@ type filteredLightningTransaction struct {
 	ExplorerUrl   string `json:"explorerUrl"`
 }
 
-func (c *Client) getLightningTransaction(req *kaminarigosdk.GetLightningTransactionRequest) (*kaminarigosdk.GetLightningTransactionResponse, error) {
+func (c *Client) GetLightningTransaction(req *kaminarigosdk.GetLightningTransactionRequest) (*kaminarigosdk.GetLightningTransactionResponse, error) {
 	url := fmt.Sprintf("%s/api/lightning/v1/transactions/%s", c.cfg.ApiUrl, req.ID)
 	var result getLightningTransactionResponse
 
@@ -94,12 +96,12 @@ func (c *Client) getLightningTransaction(req *kaminarigosdk.GetLightningTransact
 		SetResult(&result).
 		Get(url)
 	if err := checkForError(resp, err); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "can't get lightning transaction")
 	}
 
 	pbTx, err := toPbLightningTx(result.Transaction)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "can't get lightning transaction")
 	}
 
 	return &kaminarigosdk.GetLightningTransactionResponse{
