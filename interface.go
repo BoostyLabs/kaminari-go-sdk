@@ -14,12 +14,14 @@ type Interface interface {
 	GetLightningTransaction(*GetLightningTransactionRequest) (*GetLightningTransactionResponse, error)
 
 	VerifyWebhookSignature(*VerifyWebhookSignatureRequest) (*VerifyWebhookSignatureResponse, error)
+	GetStatistic(*GetStatisticRequest) (*GetStatisticResponse, error)
 }
 
 type CreateInvoiceRequest struct {
 	Amount      int64  `json:"amount"`
 	Description string `json:"description"`
 	MerchantID  string `json:"merchant_id"`
+	GroupID     string `json:"group_id"`
 }
 
 type CreateLightningInvoiceResponse struct {
@@ -180,4 +182,13 @@ type BitcoinInvoiceIsPaid struct {
 
 type VerifyWebhookSignatureResponse struct {
 	IsValid bool `json:"is_valid"`
+}
+
+type GetStatisticRequest struct {
+	GroupId string    `json:"group_id"`
+	Type    EventType `json:"type"`
+}
+
+type GetStatisticResponse struct {
+	Count int64 `json:"count"`
 }
