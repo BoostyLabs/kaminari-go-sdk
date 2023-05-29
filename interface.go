@@ -185,7 +185,7 @@ type VerifyWebhookSignatureResponse struct {
 }
 
 type GetStatisticRequest struct {
-	GroupId string    `json:"group_id"`
+	GroupID string    `json:"group_id"`
 	Type    EventType `json:"type"`
 }
 
