@@ -36,7 +36,7 @@ func (c *Client) GetStatistic(req *kaminarigosdk.GetStatisticRequest) (*kaminari
 	resp, err := c.restyClient.R().
 		SetBody(req).
 		SetResult(&result).
-		Post(url)
+		Get(url)
 	if err := checkForError(resp, err); err != nil {
 		return nil, errors.Wrap(err, "can't get webhooks statistic")
 	}
