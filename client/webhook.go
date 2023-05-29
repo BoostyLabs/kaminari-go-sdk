@@ -30,11 +30,10 @@ func (c *Client) VerifyWebhookSignature(req *kaminarigosdk.VerifyWebhookSignatur
 }
 
 func (c *Client) GetStatistic(req *kaminarigosdk.GetStatisticRequest) (*kaminarigosdk.GetStatisticResponse, error) {
-	url := fmt.Sprintf("%s/api/webhooks-listener/v1/statistic", c.cfg.ApiUrl)
+	url := fmt.Sprintf("%s/api/webhooks-listener/v1/statistic?group_id=%s&type=%d", c.cfg.ApiUrl, req.GroupID, req.Type)
 	var result kaminarigosdk.GetStatisticResponse
 
 	resp, err := c.restyClient.R().
-		SetBody(req).
 		SetResult(&result).
 		Get(url)
 	if err := checkForError(resp, err); err != nil {
