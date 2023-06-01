@@ -190,5 +190,5 @@ type GetStatisticRequest struct {
 }
 
 type GetStatisticResponse struct {
-	Count int64 `json:"count"`
+	Statistic string `json:"statistic"`
 }
