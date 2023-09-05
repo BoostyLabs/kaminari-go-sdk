@@ -19,6 +19,13 @@ func TestClient(t *testing.T) {
 	})
 	require.NoError(t, err)
 
+	t.Run("get user balance", func(t *testing.T) {
+		balance, err := cl.GetBalance()
+		require.NoError(t, err)
+		require.EqualValues(t, balance.TotalBalance, 0)
+		require.EqualValues(t, balance.FrozenAmount, 0)
+	})
+
 	var bitcoinAddress string
 	t.Run("create on-chain invoice", func(t *testing.T) {
 		addr, err := cl.CreateOnChainInvoice(&kaminarigosdk.CreateInvoiceRequest{
