@@ -1,6 +1,8 @@
 package kaminarigosdk
 
 type Interface interface {
+	GetBalance() (*Balance, error)
+
 	CreateOnChainInvoice(*CreateInvoiceRequest) (string, error)
 	CreateLightningInvoice(*CreateInvoiceRequest) (*CreateLightningInvoiceResponse, error)
 
@@ -180,4 +182,9 @@ type BitcoinInvoiceIsPaid struct {
 
 type VerifyWebhookSignatureResponse struct {
 	IsValid bool `json:"is_valid"`
+}
+
+type Balance struct {
+	TotalBalance int64 `json:"totalBalance"`
+	FrozenAmount int64 `json:"frozenAmount"`
 }
