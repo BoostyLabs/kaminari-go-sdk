@@ -2,7 +2,6 @@ package client
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"time"
 
@@ -122,7 +121,6 @@ type estimateOnChainTxResponse struct {
 // Provided amount should be in satoshi(1 BTC = 100_000_000 sats).
 func (c *Client) EstimateIOChainTx(req *kaminarigosdk.EstimateOnChainTxRequest) (*kaminarigosdk.EstimateOnChainTxResponse, error) {
 	url := fmt.Sprintf("%s/api/bitcoin/v1/tx/estimate?bitcoin_address=%v&amount=%v", c.cfg.ApiUrl, req.BitcoinAddress, req.Amount)
-	log.Println("url", url)
 	var result estimateOnChainTxResponse
 
 	resp, err := c.restyClient.R().
