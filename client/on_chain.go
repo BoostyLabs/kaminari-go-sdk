@@ -2,6 +2,7 @@ package client
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 
@@ -110,6 +111,43 @@ func (c *Client) GetOnChainTransaction(req *kaminarigosdk.GetOnChainTransactionR
 
 	return &kaminarigosdk.GetOnChainTransactionResponse{
 		Transaction: pbTx,
+	}, nil
+}
+
+type estimateOnChainTxResponse struct {
+	Fee string `json:"fee"`
+}
+
+// EstimateIOChainTx estimates fee for on-chain tx, estimated fee returns in satoshi.
+// Provided amount should be in satoshi(1 BTC = 100_000_000 sats).
+func (c *Client) EstimateIOChainTx(req *kaminarigosdk.EstimateOnChainTxRequest) (*kaminarigosdk.EstimateOnChainTxResponse, error) {
+	url := fmt.Sprintf("%s/api/bitcoin/v1/tx/estimate?bitcoin_address=%v&amount=%v", c.cfg.ApiUrl, req.BitcoinAddress, req.Amount)
+	log.Println("url", url)
+	var result estimateOnChainTxResponse
+
+	resp, err := c.restyClient.R().
+		SetResult(&result).
+		Get(url)
+	if err := checkForError(resp, err); err != nil {
+		return nil, errors.Wrap(err, "can't get on-chain transaction")
+	}
+
+	estimateRes, err := toPbEstimateFee(&result)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't parse estimate fee response")
+	}
+
+	return estimateRes, nil
+}
+
+func toPbEstimateFee(estimate *estimateOnChainTxResponse) (*kaminarigosdk.EstimateOnChainTxResponse, error) {
+	amount, err := strconv.Atoi(estimate.Fee)
+	if err != nil {
+		return nil, err
+	}
+
+	return &kaminarigosdk.EstimateOnChainTxResponse{
+		Fee: int64(amount),
 	}, nil
 }
 
