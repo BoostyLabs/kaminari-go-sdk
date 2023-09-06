@@ -3,6 +3,8 @@ package kaminarigosdk
 type Interface interface {
 	GetBalance() (*Balance, error)
 
+	EstimateIOChainTx(req *EstimateOnChainTxRequest) (*EstimateOnChainTxResponse, error)
+
 	CreateOnChainInvoice(*CreateInvoiceRequest) (string, error)
 	CreateLightningInvoice(*CreateInvoiceRequest) (*CreateLightningInvoiceResponse, error)
 
@@ -187,4 +189,13 @@ type VerifyWebhookSignatureResponse struct {
 type Balance struct {
 	TotalBalance int64 `json:"totalBalance"`
 	FrozenAmount int64 `json:"frozenAmount"`
+}
+
+type EstimateOnChainTxRequest struct {
+	BitcoinAddress string `json:"bitcoin_address"`
+	Amount         int64  `json:"amount"`
+}
+
+type EstimateOnChainTxResponse struct {
+	Fee int64 `json:"amount"`
 }

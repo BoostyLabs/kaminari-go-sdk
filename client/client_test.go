@@ -26,6 +26,14 @@ func TestClient(t *testing.T) {
 		require.EqualValues(t, balance.FrozenAmount, 0)
 	})
 
+	t.Run("estimate on-chain tx", func(t *testing.T) {
+		_, err := cl.EstimateIOChainTx(&kaminarigosdk.EstimateOnChainTxRequest{
+			BitcoinAddress: "bcrt1q66y8c986x79gw4u86926cqw86d39m23ftacwc9",
+			Amount:         10000,
+		})
+		require.NoError(t, err)
+	})
+
 	var bitcoinAddress string
 	t.Run("create on-chain invoice", func(t *testing.T) {
 		addr, err := cl.CreateOnChainInvoice(&kaminarigosdk.CreateInvoiceRequest{
