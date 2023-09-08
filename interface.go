@@ -5,6 +5,9 @@ type Interface interface {
 
 	EstimateIOChainTx(req *EstimateOnChainTxRequest) (*EstimateOnChainTxResponse, error)
 
+	GetLightningAddress() (*GetLightningAddrResponse, error)
+	GetLightningAddressForMerchant(req *GetLightningAddrForMerchantRequest) (*GetLightningAddrForMerchantResponse, error)
+
 	CreateOnChainInvoice(*CreateInvoiceRequest) (string, error)
 	CreateLightningInvoice(*CreateInvoiceRequest) (*CreateLightningInvoiceResponse, error)
 
@@ -198,4 +201,16 @@ type EstimateOnChainTxRequest struct {
 
 type EstimateOnChainTxResponse struct {
 	Fee int64 `json:"amount"`
+}
+
+type GetLightningAddrResponse struct {
+	Invoice string `json:"invoice"`
+}
+
+type GetLightningAddrForMerchantRequest struct {
+	MerchantID string `json:"merchantId"`
+}
+
+type GetLightningAddrForMerchantResponse struct {
+	Invoice string `json:"invoice"`
 }
