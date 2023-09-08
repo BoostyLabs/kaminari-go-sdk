@@ -14,8 +14,8 @@ func TestClient(t *testing.T) {
 	t.Skip("for manual testing")
 
 	cl, err := client.DefaultClient(&client.Config{
-		ApiKey: "83dc2702e956101edcb16d6eefaeca7700efe0d6770f02f312139b634d33d5bb",
-		ApiUrl: "https://api-dev.kaminari.cloud/gateway",
+		ApiKey: "9fbda4b2ad024f5c98b7d21288cdcb01de83bfc9a435966cba858d6bfdf417fb",
+		ApiUrl: "http://localhost:8080",
 	})
 	require.NoError(t, err)
 
