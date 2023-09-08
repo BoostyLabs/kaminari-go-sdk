@@ -14,8 +14,8 @@ func TestClient(t *testing.T) {
 	t.Skip("for manual testing")
 
 	cl, err := client.DefaultClient(&client.Config{
-		ApiKey: "9fbda4b2ad024f5c98b7d21288cdcb01de83bfc9a435966cba858d6bfdf417fb",
-		ApiUrl: "http://localhost:8080",
+		ApiKey: "83dc2702e956101edcb16d6eefaeca7700efe0d6770f02f312139b634d33d5bb",
+		ApiUrl: "https://api-dev.kaminari.cloud/gateway",
 	})
 	require.NoError(t, err)
 
@@ -24,6 +24,20 @@ func TestClient(t *testing.T) {
 		require.NoError(t, err)
 		require.EqualValues(t, balance.TotalBalance, 0)
 		require.EqualValues(t, balance.FrozenAmount, 0)
+	})
+
+	t.Run("get lnurl", func(t *testing.T) {
+		lnurl, err := cl.GetLightningAddress()
+		require.NoError(t, err)
+		require.NotEmpty(t, lnurl.Invoice)
+	})
+
+	t.Run("get lnurl for merchant", func(t *testing.T) {
+		lnurl, err := cl.GetLightningAddressForMerchant(&kaminarigosdk.GetLightningAddrForMerchantRequest{
+			MerchantID: "Not specified",
+		})
+		require.NoError(t, err)
+		require.NotEmpty(t, lnurl.Invoice)
 	})
 
 	t.Run("estimate on-chain tx", func(t *testing.T) {
