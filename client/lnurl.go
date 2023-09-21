@@ -35,3 +35,17 @@ func (c *Client) GetLightningAddressForMerchant(req *kaminarigosdk.GetLightningA
 
 	return &result, nil
 }
+
+func (c *Client) ConvertLnUrlInvoiceToLND(req *kaminarigosdk.ConvertLnUrlInvoiceToLNDRequest) (*kaminarigosdk.ConvertLnUrlInvoiceToLNDResponse, error) {
+	url := fmt.Sprintf("%s/api/lightning/v1/invoice/from/lnurl/%v?amount=%v", c.cfg.ApiUrl, req.LnrulInvoice, req.Amount)
+	var result kaminarigosdk.ConvertLnUrlInvoiceToLNDResponse
+
+	resp, err := c.restyClient.R().
+		SetResult(&result).
+		Get(url)
+	if err := checkForError(resp, err); err != nil {
+		return nil, errors.Wrap(err, "can't convert ln invoice from lnurl")
+	}
+
+	return &result, nil
+}

@@ -7,6 +7,7 @@ type Interface interface {
 
 	GetLightningAddress() (*GetLightningAddrResponse, error)
 	GetLightningAddressForMerchant(req *GetLightningAddrForMerchantRequest) (*GetLightningAddrForMerchantResponse, error)
+	ConvertLnUrlInvoiceToLND(req *ConvertLnUrlInvoiceToLNDRequest) (*ConvertLnUrlInvoiceToLNDResponse, error)
 
 	CreateOnChainInvoice(*CreateInvoiceRequest) (string, error)
 	CreateLightningInvoice(*CreateInvoiceRequest) (*CreateLightningInvoiceResponse, error)
@@ -212,5 +213,14 @@ type GetLightningAddrForMerchantRequest struct {
 }
 
 type GetLightningAddrForMerchantResponse struct {
+	Invoice string `json:"invoice"`
+}
+
+type ConvertLnUrlInvoiceToLNDRequest struct {
+	LnrulInvoice string `json:"lnurl_invoice"`
+	Amount       int    `help:"amount should be specified in satoshis"`
+}
+
+type ConvertLnUrlInvoiceToLNDResponse struct {
 	Invoice string `json:"invoice"`
 }
