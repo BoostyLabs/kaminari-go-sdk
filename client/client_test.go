@@ -26,6 +26,15 @@ func TestClient(t *testing.T) {
 		require.EqualValues(t, balance.FrozenAmount, 0)
 	})
 
+	t.Run("get ln invoice from lnurl", func(t *testing.T) {
+		resp, err := cl.ConvertLnUrlInvoiceToLND(&kaminarigosdk.ConvertLnUrlInvoiceToLNDRequest{
+			LnrulInvoice: "lnurl1dp68gurn8ghj7ampd3kx2ar0veekzar0wd5xjtnrdakj7tnhv4kxctttdehhwm30d3h82unvwqhhgmmjwp5kgung096xsmfhxvevd4tf",
+			Amount:       1000,
+		})
+		require.NoError(t, err)
+		require.NotEmpty(t, resp.Invoice)
+	})
+
 	t.Run("get lnurl", func(t *testing.T) {
 		lnurl, err := cl.GetLightningAddress()
 		require.NoError(t, err)
