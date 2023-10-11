@@ -33,7 +33,7 @@ func toPbBalance(balance *balance) (*kaminarigosdk.Balance, error) {
 		return nil, err
 	}
 
-	frozenBalance, err := strconv.Atoi(balance.TotalBalance)
+	frozenBalance, err := strconv.Atoi(balance.FrozenAmount)
 	if err != nil {
 		return nil, err
 	}
