@@ -117,9 +117,9 @@ type estimateOnChainTxResponse struct {
 	Fee string `json:"fee"`
 }
 
-// EstimateIOChainTx estimates fee for on-chain tx, estimated fee returns in satoshi.
+// EstimateOnChainTx estimates fee for on-chain tx, estimated fee returns in satoshi.
 // Provided amount should be in satoshi(1 BTC = 100_000_000 sats).
-func (c *Client) EstimateIOChainTx(req *kaminarigosdk.EstimateOnChainTxRequest) (*kaminarigosdk.EstimateOnChainTxResponse, error) {
+func (c *Client) EstimateOnChainTx(req *kaminarigosdk.EstimateOnChainTxRequest) (*kaminarigosdk.EstimateOnChainTxResponse, error) {
 	url := fmt.Sprintf("%s/api/bitcoin/v1/tx/estimate?bitcoin_address=%v&amount=%v", c.cfg.ApiUrl, req.BitcoinAddress, req.Amount)
 	var result estimateOnChainTxResponse
 
