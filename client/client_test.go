@@ -50,7 +50,7 @@ func TestClient(t *testing.T) {
 	})
 
 	t.Run("estimate on-chain tx", func(t *testing.T) {
-		_, err := cl.EstimateIOChainTx(&kaminarigosdk.EstimateOnChainTxRequest{
+		_, err := cl.EstimateOnChainTx(&kaminarigosdk.EstimateOnChainTxRequest{
 			BitcoinAddress: "bcrt1q66y8c986x79gw4u86926cqw86d39m23ftacwc9",
 			Amount:         10000,
 		})

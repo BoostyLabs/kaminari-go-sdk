@@ -3,7 +3,7 @@ package kaminarigosdk
 type Interface interface {
 	GetBalance() (*Balance, error)
 
-	EstimateIOChainTx(req *EstimateOnChainTxRequest) (*EstimateOnChainTxResponse, error)
+	EstimateOnChainTx(req *EstimateOnChainTxRequest) (*EstimateOnChainTxResponse, error)
 
 	GetLightningAddress() (*GetLightningAddrResponse, error)
 	GetLightningAddressForMerchant(req *GetLightningAddrForMerchantRequest) (*GetLightningAddrForMerchantResponse, error)
