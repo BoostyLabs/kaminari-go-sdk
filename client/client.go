@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	log "github.com/sirupsen/logrus"
 
 	kaminarigosdk "github.com/BoostyLabs/kaminari-go-sdk"
 )
@@ -26,7 +25,6 @@ type Client struct {
 func DefaultClient(cfg *Config) (kaminarigosdk.Interface, error) {
 	if !isCfgValid(cfg) {
 		err := errors.Errorf("kaminari config is not valid")
-		log.Error(err)
 		return nil, err
 	}
 
