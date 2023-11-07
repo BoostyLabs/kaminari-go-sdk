@@ -1,8 +1,9 @@
 package client
 
 type Config struct {
-	ApiKey string
-	ApiUrl string
+	ApiKey    string
+	SecretKey string
+	ApiUrl    string
 }
 
 func isCfgValid(cfg *Config) bool {
