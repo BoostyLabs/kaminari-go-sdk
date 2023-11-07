@@ -1,11 +1,13 @@
 package kaminarigosdk
 
 type Interface interface {
-	GetBalance() (*Balance, error)
+	GetBalance(nonce string) (*Balance, error)
+
+	GetSignature(url string, nonce string, body []byte) (string, error)
 
 	EstimateOnChainTx(req *EstimateOnChainTxRequest) (*EstimateOnChainTxResponse, error)
 
-	GetLightningAddress() (*GetLightningAddrResponse, error)
+	GetLightningAddress(nonce string) (*GetLightningAddrResponse, error)
 	GetLightningAddressForMerchant(req *GetLightningAddrForMerchantRequest) (*GetLightningAddrForMerchantResponse, error)
 	ConvertLnUrlInvoiceToLND(req *ConvertLnUrlInvoiceToLNDRequest) (*ConvertLnUrlInvoiceToLNDResponse, error)
 
@@ -28,6 +30,7 @@ type CreateInvoiceRequest struct {
 	Amount      int64  `json:"amount"`
 	Description string `json:"description"`
 	MerchantID  string `json:"merchant_id"`
+	Nonce       string `json:"nonce"`
 }
 
 type CreateLightningInvoiceResponse struct {
@@ -39,15 +42,18 @@ type SendOnChainPaymentRequest struct {
 	BitcoinAddress string `json:"bitcoin_address"`
 	Amount         int64  `json:"amount"`
 	MerchantID     string `json:"merchant_id"`
+	Nonce          string `json:"nonce"`
 }
 
 type SendLightningPaymentRequest struct {
 	Invoice    string `json:"invoice"`
 	MerchantID string `json:"merchant_id"`
+	Nonce      string `json:"nonce"`
 }
 
 type GetOnChainInvoiceRequest struct {
 	BitcoinAddress string `json:"bitcoin_address"`
+	Nonce          string `json:"nonce"`
 }
 
 type GetOnChainInvoiceResponse struct {
@@ -83,7 +89,8 @@ type Timestamp struct {
 }
 
 type GetLightningInvoiceRequest struct {
-	ID string `json:"id"`
+	ID    string `json:"id"`
+	Nonce string `json:"nonce"`
 }
 
 type GetLightningInvoiceResponse struct {
@@ -100,7 +107,8 @@ type FilteredLightningInvoice struct {
 }
 
 type GetOnChainTransactionRequest struct {
-	ID string `json:"id"`
+	ID    string `json:"id"`
+	Nonce string `json:"nonce"`
 }
 
 type GetOnChainTransactionResponse struct {
@@ -140,7 +148,8 @@ const (
 )
 
 type GetLightningTransactionRequest struct {
-	ID string `json:"id"`
+	ID    string `json:"id"`
+	Nonce string `json:"nonce"`
 }
 
 type GetLightningTransactionResponse struct {
@@ -162,6 +171,7 @@ type FilteredLightningTransaction struct {
 type VerifyWebhookSignatureRequest struct {
 	Signature string `json:"signature"`
 	Event     []byte `json:"event"`
+	Nonce     string `json:"nonce"`
 }
 
 type Event struct {
@@ -198,6 +208,7 @@ type Balance struct {
 type EstimateOnChainTxRequest struct {
 	BitcoinAddress string `json:"bitcoin_address"`
 	Amount         int64  `json:"amount"`
+	Nonce          string `json:"nonce"`
 }
 
 type EstimateOnChainTxResponse struct {
@@ -210,6 +221,7 @@ type GetLightningAddrResponse struct {
 
 type GetLightningAddrForMerchantRequest struct {
 	MerchantID string `json:"merchantId"`
+	Nonce      string `json:"nonce"`
 }
 
 type GetLightningAddrForMerchantResponse struct {
@@ -219,6 +231,7 @@ type GetLightningAddrForMerchantResponse struct {
 type ConvertLnUrlInvoiceToLNDRequest struct {
 	LnrulInvoice string `json:"lnurl_invoice"`
 	Amount       int    `help:"amount should be specified in satoshis"`
+	Nonce        string `json:"nonce"`
 }
 
 type ConvertLnUrlInvoiceToLNDResponse struct {

@@ -8,12 +8,20 @@ import (
 	kaminarigosdk "github.com/BoostyLabs/kaminari-go-sdk"
 )
 
-func (c *Client) GetLightningAddress() (*kaminarigosdk.GetLightningAddrResponse, error) {
-	url := fmt.Sprintf("%s/api/lightning/v1/lnurl/address", c.cfg.ApiUrl)
+func (client *Client) GetLightningAddress(nonce string) (*kaminarigosdk.GetLightningAddrResponse, error) {
+	uriPath := fmt.Sprintf("/api/lightning/v1/lnurl/address?nonce=%s", nonce)
+	url := fmt.Sprintf("%s/%s", client.cfg.ApiUrl, uriPath)
+
 	var result kaminarigosdk.GetLightningAddrResponse
 
-	resp, err := c.restyClient.R().
+	signature, err := client.GetSignature(uriPath, nonce, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := client.restyClient.R().
 		SetResult(&result).
+		SetHeader(ApiSignatureHeader, signature).
 		Get(url)
 	if err := checkForError(resp, err); err != nil {
 		return nil, errors.Wrap(err, "can't get lightning transaction")
@@ -22,12 +30,20 @@ func (c *Client) GetLightningAddress() (*kaminarigosdk.GetLightningAddrResponse,
 	return &result, nil
 }
 
-func (c *Client) GetLightningAddressForMerchant(req *kaminarigosdk.GetLightningAddrForMerchantRequest) (*kaminarigosdk.GetLightningAddrForMerchantResponse, error) {
-	url := fmt.Sprintf("%s/api/lightning/v1/lnurl/address/for/merchant/%v", c.cfg.ApiUrl, req.MerchantID)
+func (client *Client) GetLightningAddressForMerchant(req *kaminarigosdk.GetLightningAddrForMerchantRequest) (*kaminarigosdk.GetLightningAddrForMerchantResponse, error) {
+	uriPath := fmt.Sprintf("/api/lightning/v1/lnurl/address/for/merchant/%s?nonce=%s", req.MerchantID, req.Nonce)
+	url := fmt.Sprintf("%s/%s", client.cfg.ApiUrl, uriPath)
+
 	var result kaminarigosdk.GetLightningAddrForMerchantResponse
 
-	resp, err := c.restyClient.R().
+	signature, err := client.GetSignature(uriPath, req.Nonce, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := client.restyClient.R().
 		SetResult(&result).
+		SetHeader(ApiSignatureHeader, signature).
 		Get(url)
 	if err := checkForError(resp, err); err != nil {
 		return nil, errors.Wrap(err, "can't get lightning transaction")
@@ -36,12 +52,20 @@ func (c *Client) GetLightningAddressForMerchant(req *kaminarigosdk.GetLightningA
 	return &result, nil
 }
 
-func (c *Client) ConvertLnUrlInvoiceToLND(req *kaminarigosdk.ConvertLnUrlInvoiceToLNDRequest) (*kaminarigosdk.ConvertLnUrlInvoiceToLNDResponse, error) {
-	url := fmt.Sprintf("%s/api/lightning/v1/invoice/from/lnurl/%v?amount=%v", c.cfg.ApiUrl, req.LnrulInvoice, req.Amount)
+func (client *Client) ConvertLnUrlInvoiceToLND(req *kaminarigosdk.ConvertLnUrlInvoiceToLNDRequest) (*kaminarigosdk.ConvertLnUrlInvoiceToLNDResponse, error) {
+	uriPath := fmt.Sprintf("/api/lightning/v1/invoice/from/lnurl/%v?amount=%v", req.LnrulInvoice, req.Amount)
+	url := client.cfg.ApiUrl + uriPath
+
 	var result kaminarigosdk.ConvertLnUrlInvoiceToLNDResponse
 
-	resp, err := c.restyClient.R().
+	signature, err := client.GetSignature(uriPath, req.Nonce, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	resp, err := client.restyClient.R().
 		SetResult(&result).
+		SetHeader(ApiSignatureHeader, signature).
 		Get(url)
 	if err := checkForError(resp, err); err != nil {
 		return nil, errors.Wrap(err, "can't convert ln invoice from lnurl")

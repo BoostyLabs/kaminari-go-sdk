@@ -14,10 +14,18 @@ type balance struct {
 	FrozenAmount string `json:"frozenAmount"`
 }
 
-func (c *Client) GetBalance() (*kaminarigosdk.Balance, error) {
-	url := fmt.Sprintf("%s/api/lightning/v1/balance", c.cfg.ApiUrl)
+func (client *Client) GetBalance(nonce string) (*kaminarigosdk.Balance, error) {
+	uriPath := fmt.Sprintf("/api/lightning/v1/balance?nonce=%s", nonce)
+	url := client.cfg.ApiUrl + uriPath
+
+	signature, err := client.GetSignature(uriPath, nonce, nil)
+	if err != nil {
+		return nil, err
+	}
+
 	var balanceResp balance
-	resp, err := c.restyClient.R().
+	resp, err := client.restyClient.R().
+		SetHeader(ApiSignatureHeader, signature).
 		SetResult(&balanceResp).
 		Get(url)
 	if err := checkForError(resp, err); err != nil {
