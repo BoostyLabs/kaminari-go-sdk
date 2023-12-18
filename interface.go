@@ -24,6 +24,8 @@ type Interface interface {
 	GetLightningTransaction(*GetLightningTransactionRequest) (*GetLightningTransactionResponse, error)
 
 	VerifyWebhookSignature(*VerifyWebhookSignatureRequest) (*VerifyWebhookSignatureResponse, error)
+
+	GetStatistic(*GetStatisticRequest) (*GetStatisticResponse, error)
 }
 
 type CreateInvoiceRequest struct {
@@ -31,6 +33,7 @@ type CreateInvoiceRequest struct {
 	Description string `json:"description"`
 	MerchantID  string `json:"merchant_id"`
 	Nonce       string `json:"nonce"`
+	GroupID     string `json:"group_id"`
 }
 
 type CreateLightningInvoiceResponse struct {
@@ -236,4 +239,14 @@ type ConvertLnUrlInvoiceToLNDRequest struct {
 
 type ConvertLnUrlInvoiceToLNDResponse struct {
 	Invoice string `json:"invoice"`
+}
+
+type GetStatisticRequest struct {
+	GroupID string    `json:"group_id"`
+	Type    EventType `json:"type"`
+	Nonce   string    `json:"nonce"`
+}
+
+type GetStatisticResponse struct {
+	Statistic string `json:"statistic"`
 }
